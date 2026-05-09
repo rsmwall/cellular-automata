@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://1rl8uaof1lcn"]
+
+[ext_resource type="Script" uid="uid://co13yut44r2px" path="res://cellular_automato_generation.gd" id="1_7xf6f"]
+
+[node name="CellularAutomatoGeneration" type="Node" unique_id=490987229]
+script = ExtResource("1_7xf6f")

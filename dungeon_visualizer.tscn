@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://d3hns4mfcrt4a"]
+
+[ext_resource type="Script" uid="uid://jim2u1lm2y8u" path="res://dungeon_visualizer.gd" id="1_ag1j2"]
+[ext_resource type="PackedScene" uid="uid://1rl8uaof1lcn" path="res://cellular_automato_generation.tscn" id="2_rpb5n"]
+
+[node name="DungeonVisualizer" type="Node2D" unique_id=859323117 node_paths=PackedStringArray("dungeon_generator")]
+script = ExtResource("1_ag1j2")
+map_size = Vector2i(100, 100)
+dungeon_generator = NodePath("CellularAutomatoGeneration")
+
+[node name="CellularAutomatoGeneration" parent="." unique_id=698414658 instance=ExtResource("2_rpb5n")]
+iteration_count = 7
+
+[node name="UpdateTimer" type="Timer" parent="." unique_id=1960554536]
+
+[connection signal="generation_done" from="CellularAutomatoGeneration" to="." method="_on_cellular_automato_generation_generation_done"]
+[connection signal="timeout" from="UpdateTimer" to="." method="_on_update_timer_timeout"]
