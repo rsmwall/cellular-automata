@@ -21,6 +21,38 @@ func _ready():
 	map_img = ImageTexture.create_from_image(img)
 	
 func _input(event):
+	# quando apertar a tecla "A" (Automático / Animação Completa)
+	if event is InputEventKey and event.pressed and event.keycode == KEY_A:
+		var generator = dungeon_generator as CellularAutomataGenerator
+		
+		# pega o estado do mapa após todas as iterações do autômato
+		var last_map_state: Array[Array]
+		if not map_queue.is_empty():
+			last_map_state = map_queue.back()
+		else:
+			last_map_state = map
+			
+		# faz uma cópia profunda para não estragar o histórico visual
+		var map_to_analyze = last_map_state.duplicate(true) 
+		
+		# faz o Flood-Fill e pinta a caverna principal
+		var stats = generator.analyze_and_paint_connectivity(map_to_analyze)
+		var painted_map = stats["mapa_modificado"]
+		map_queue.push_back(painted_map.duplicate(true)) # adiciona a etapa de pintura na fila
+		
+		# faz a Poda nas ilhas isoladas
+		var map_to_prune = painted_map.duplicate(true)
+		generator.prune_isolated_islands(map_to_prune)
+		map_queue.push_back(map_to_prune) # adiciona o mapa limpo na fila
+		
+		# desativa o modo de input manual para liberar o Timer
+		input_mode = false
+		
+		print("Modo Animação Ativado! O Timer consumirá a fila.")
+		
+		input_mode = false
+		$UpdateTimer.start()
+	
 	# quando apertar a tecla "P" (Poda)
 	if event is InputEventKey and event.pressed and event.keycode == KEY_P:
 		if map.size() > 0:
@@ -49,7 +81,6 @@ func _input(event):
 	if event.is_action_pressed("ui_select"):
 		if not map.is_empty():
 			var stats = (dungeon_generator as CellularAutomataGenerator).analyze_and_paint_connectivity(map)
-			print("Métricas do Mapa Atual: ", stats)
 			map_queue.push_back(stats["mapa_modificado"])
 	
 	if event.is_action_pressed("ui_accept"):

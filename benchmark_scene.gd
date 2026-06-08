@@ -44,6 +44,9 @@ func _run_test_batch(size: Vector2, fill_rate: float, iters: int, runs: int):
 		# avalia usando o Flood Fill de 4 direções
 		var stats = generator.analyze_and_paint_connectivity(final_map)
 		
+		# realiza a poda das ilhas isoladas
+		generator.prune_isolated_islands(final_map)
+		
 		# para o cronômetro
 		var end_time = Time.get_ticks_msec()
 		

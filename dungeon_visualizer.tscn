@@ -12,6 +12,7 @@ dungeon_generator = NodePath("CellularAutomatoGeneration")
 iteration_count = 7
 
 [node name="UpdateTimer" type="Timer" parent="." unique_id=1960554536]
+autostart = true
 
 [connection signal="generation_done" from="CellularAutomatoGeneration" to="." method="_on_cellular_automato_generation_generation_done"]
 [connection signal="timeout" from="UpdateTimer" to="." method="_on_update_timer_timeout"]
